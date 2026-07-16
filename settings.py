@@ -25,4 +25,7 @@ class Settings:
         self.bullet_speed = 7
         self.bullet_count = 5
 
-        
+        self.alien_file: Path = self.images_path / 'enemy_4.png'
+        self.alien_w = 40
+        self.alien_h = 40
+        self.alien_fleet_speed = 7
