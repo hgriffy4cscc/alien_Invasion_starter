@@ -13,6 +13,7 @@ class Alien(Sprite):
         self.screen = fleet.game.screen
         self.boundaries = fleet.game.screen.get_rect()
         self.settings = fleet.game.settings
+        self.fleet = fleet
 
         self.image = pygame.image.load(self.settings.alien_file)
         self.image = pygame.transform.scale(self.image,
@@ -28,10 +29,7 @@ class Alien(Sprite):
 
     def update(self):
         temp_speed = self.settings.alien_fleet_speed
-        if self.check_edges():
-            self.settings.alien_fleet_direction *= -1
-            self.y += self.settings.alien_fleet_drop_speed
-        self.x += temp_speed * self.settings.alien_fleet_direction
+        self.x += temp_speed * self.fleet.alien_fleet_direction
         self.rect.x = self.x
         self.rect.y = self.y
 
