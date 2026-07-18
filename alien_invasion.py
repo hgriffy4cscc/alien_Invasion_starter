@@ -1,6 +1,8 @@
 import sys
 import pygame
+from time import sleep
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from arsenal import Arsenal
 # from alien import Alien
@@ -11,6 +13,7 @@ class AlienInvasion:
     def __init__(self) -> None:
         pygame.init()
         self.settings = Settings()
+        self.game_stats = GameStats(self.settings.starting_ship_count)
 
         self.screen = pygame.display.set_mode(
             (self.settings.screen_w,self.settings.screen_h)
@@ -26,16 +29,17 @@ class AlienInvasion:
         self.running = True
         self.clock = pygame.time.Clock()
 
-        self.ship = Ship(self, Arsenal(self))
-        self.alien_fleet = AlienFleet(self)
-        self.alien_fleet.create_fleet()
-
         pygame.mixer.init()
         self.laser_sound = pygame.mixer.Sound(self.settings.bullet_sound_file)
         self.laser_sound.set_volume(0.7)
 
         self.impact_sound = pygame.mixer.Sound(self.settings.impact_sound_file)
         self.impact_sound.set_volume(0.8)
+
+        self.ship = Ship(self, Arsenal(self))
+        self.alien_fleet = AlienFleet(self)
+        self.alien_fleet.create_fleet()
+        self.game_active = True
 
         self.pause_aliens = False
     
@@ -53,12 +57,12 @@ class AlienInvasion:
     def _check_collisions(self):
         # check ship collisions viz aliens
         if self.ship.check_collisions( self.alien_fleet.fleet):
-            self._reset_level()
+            self._check_game_status()
             # de-increment 1 life
 
             # check aliens viz bottom of screen
         if self.alien_fleet.check_fleet_bottom():
-            self._reset_level()
+            self._check_game_status()
         
         if self.alien_fleet.check_destroyed_status():
             self._reset_level()
@@ -68,6 +72,14 @@ class AlienInvasion:
         if collisions:
             self.impact_sound.play()
             self.impact_sound.fadeout(500)
+
+    def _check_game_status(self):
+        if self.game_stats.ships_remaining > 0:
+            self.game_stats.ships_remaining -= 1
+            self._reset_level()
+            sleep(0.5)
+        else:
+            self.game_active = False
 
     def _reset_level(self):
         self.ship.arsenal.arsenal.remove()

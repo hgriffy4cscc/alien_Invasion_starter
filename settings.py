@@ -17,6 +17,7 @@ class Settings:
         self.ship_w: int = 40
         self.ship_h: int = 60
         self.ship_speed: int = 5
+        self.starting_ship_count = 3
 
         self.bullet_file: Path = self.images_path / 'laserBlast.png'
         self.bullet_sound_file: Path = Path.cwd() / 'Assets' / 'sound' / 'laser.mp3'
