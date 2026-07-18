@@ -56,7 +56,11 @@ class AlienInvasion:
             self._reset_level()
             # de-increment 1 life
 
-        # check bullets viz aliens
+            # check aliens viz bottom of screen
+        if self.alien_fleet.check_fleet_bottom():
+            self._reset_level()
+
+    # check bullets viz aliens
         collisions = self.alien_fleet.check_collisions(self.ship.arsenal.arsenal)
         if collisions:
             self.impact_sound.play()
