@@ -33,15 +33,39 @@ class AlienInvasion:
         pygame.mixer.init()
         self.laser_sound = pygame.mixer.Sound(self.settings.bullet_sound_file)
         self.laser_sound.set_volume(0.7)
+
+        self.impact_sound = pygame.mixer.Sound(self.settings.impact_sound_file)
+        self.impact_sound.set_volume(0.8)
+
+        self.pause_aliens = False
     
     def run_game(self):
         # Game Loop
         while self.running:
             self._check_events()
             self.ship.update()
-            self.alien_fleet.update_fleet()
+            if not self.pause_aliens:
+                self.alien_fleet.update_fleet()
+            self._check_collisions()
             self._update_screen()
             self.clock.tick(self.settings.FPS)
+
+    def _check_collisions(self):
+        # check ship collisions viz aliens
+        if self.ship.check_collisions( self.alien_fleet.fleet):
+            self._reset_level()
+            # de-increment 1 life
+
+        # check bullets viz aliens
+        collisions = self.alien_fleet.check_collisions(self.ship.arsenal.arsenal)
+        if collisions:
+            self.impact_sound.play()
+            self.impact_sound.fadeout(500)
+
+    def _reset_level(self):
+        self.ship.arsenal.arsenal.remove()
+        self.alien_fleet.fleet.empty()
+        self.alien_fleet.create_fleet()
 
     def _update_screen(self):
         self.screen.blit(self.bg, (0,0))
@@ -79,6 +103,11 @@ class AlienInvasion:
             self.running = False
             pygame.quit()
             sys.exit()
+        if event.key == pygame.K_p:
+            if self.pause_aliens:
+                self.pause_aliens = False
+            else:
+                self.pause_aliens = True
 
 
 if __name__ == '__main__':
