@@ -59,6 +59,9 @@ class AlienInvasion:
             # check aliens viz bottom of screen
         if self.alien_fleet.check_fleet_bottom():
             self._reset_level()
+        
+        if self.alien_fleet.check_destroyed_status():
+            self._reset_level()
 
     # check bullets viz aliens
         collisions = self.alien_fleet.check_collisions(self.ship.arsenal.arsenal)
