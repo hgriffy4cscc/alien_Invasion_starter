@@ -15,6 +15,7 @@ class GameStats():
         self.reset_stats()
         self.max_score = 0
 
+
     def init_saved_scores(self):
         self.path = self.settings.scores_file
         if self.path.exists():

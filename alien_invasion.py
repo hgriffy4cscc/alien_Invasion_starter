@@ -77,6 +77,7 @@ class AlienInvasion:
             # update game stats for level
             self.game_stats.update_level()
             # update HUD view
+            self.HUD.update_level()
 
     # check bullets viz aliens
         collisions = self.alien_fleet.check_collisions(self.ship.arsenal.arsenal)
