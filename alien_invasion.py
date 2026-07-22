@@ -8,6 +8,7 @@ from arsenal import Arsenal
 # from alien import Alien
 from alien_fleet import AlienFleet
 from button import Button
+from hud import HUD
 
 class AlienInvasion:
 
@@ -22,6 +23,7 @@ class AlienInvasion:
             )
         pygame.display.set_caption(self.settings.name)
 
+        self.HUD = HUD(self)
 
         self.bg = pygame.image.load(self.settings.bg_file)
         self.bg = pygame.transform.scale(self.bg,
@@ -82,6 +84,7 @@ class AlienInvasion:
             self.impact_sound.play()
             self.impact_sound.fadeout(500)
             self.game_stats.update(collisions)
+            self.HUD.update_scores()
 
     def _check_game_status(self):
         if self.game_stats.ships_remaining > 0:
@@ -97,13 +100,11 @@ class AlienInvasion:
         self.alien_fleet.create_fleet()
 
     def restart_game(self):
-        # set up dynamic settings
         self.settings.initialize_dynamic_settings()
-        # reset Game stats
         self.game_stats.reset_stats()
-        # update HUD scores
-        self._reset_level
-        self.ship._center_ship
+        self.HUD.update_scores()
+        self._reset_level()
+        self.ship._center_ship()
         self.game_active = True
         pygame.mouse.set_visible(False)
 
@@ -112,7 +113,7 @@ class AlienInvasion:
         self.screen.blit(self.bg, (0,0))
         self.ship.draw()
         self.alien_fleet.draw()
-        # draw HUD
+        self.HUD.draw()
 
         if not self.game_active:
             self.play_button.draw()
@@ -122,6 +123,7 @@ class AlienInvasion:
     def _check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.game_stats.save_scores()
                 self.running = False
                 pygame.quit()
                 sys.exit()
@@ -154,6 +156,7 @@ class AlienInvasion:
                 self.laser_sound.fadeout(250)
         if event.key == pygame.K_q:
             self.running = False
+            self.game_stats.save_scores()
             pygame.quit()
             sys.exit()
         if event.key == pygame.K_p:

@@ -57,8 +57,7 @@ class GameStats():
 
     def _update_hi_score(self):
         if self.score > self.hi_score:
-            self.max_score = self.score
-        # print(f'Hi: {self.hi_score}')
+            self.hi_score = self.score
 
     def _update_score(self, collisions):
         for alien in collisions.values():
