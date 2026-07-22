@@ -13,6 +13,7 @@ class Settings:
         self.difficulty_scale = 1.1
         self.images_path: Path = Path.cwd() / 'Assets' / 'images'
         self.bg_file: Path = self.images_path / 'Starbasesnow.png'
+        self.scores_file: Path = Path.cwd() / 'Assets' / 'file' / 'scores.json'
 
         self.ship_file: Path = self.images_path / 'ship2(no bg).png'
         self.ship_w: int = 40
